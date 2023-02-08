@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -6,15 +7,41 @@ class ChatScreen extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final messagesStream = FirebaseFirestore.instance
+        .collection('chats')
+        .doc('uYX0Ex0Ng81hwDjcjvO0')
+        .collection('messages')
+        .snapshots();
+
     return Scaffold(
-        body: ListView(
-      padding: const EdgeInsets.all(20.0),
-      children: const <Widget>[
-        Text("I'm dedicating every day to you"),
-        Text('Domestic life was never quite my style'),
-        Text('When you smile, you knock me out, I fall apart'),
-        Text('And I thought I was so smart'),
-      ],
-    ));
+        body: StreamBuilder<QuerySnapshot>(
+            stream: messagesStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return ListView(
+                children: snapshot.data!.docs
+                    .map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                      print(data);
+
+                      return ListTile(
+                        title: Text(data['text']),
+                        // subtitle: Text(data['company']),
+                      );
+                    })
+                    .toList()
+                    .cast(),
+              );
+            }));
   }
 }
