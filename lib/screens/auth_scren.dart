@@ -2,7 +2,6 @@ import 'package:chat_app/widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -58,11 +57,15 @@ class _AuthScreenState extends State<AuthScreen> {
           'email': email,
         });
       }
-    } on PlatformException catch (err) {
+    } on FirebaseAuthException catch (e) {
       var message = 'An error occurred, pelase check your credentials!';
 
-      if (err.message != null) {
-        message = err.message!;
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Wrong password provided for that user.';
+      } else if (e.message != null) {
+        message = e.message!;
       }
 
       ScaffoldMessenger.of(ctx).showSnackBar(
