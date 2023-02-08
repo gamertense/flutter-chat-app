@@ -32,7 +32,6 @@ class ChatScreen extends StatelessWidget {
                     .map((DocumentSnapshot document) {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
-                      print(data);
 
                       return ListTile(
                         title: Text(data['text']),
