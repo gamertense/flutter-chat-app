@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  @override
   final String message;
   final String userName;
   final String userImage;

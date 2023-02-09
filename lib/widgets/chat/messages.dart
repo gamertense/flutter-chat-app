@@ -10,7 +10,7 @@ class Messages extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final messagesStream = FirebaseFirestore.instance
-        .collection('chat')
+        .collection('chats')
         .orderBy(
           'createdAt',
           descending: true,
@@ -25,7 +25,7 @@ class Messages extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        final chatDocs = chatSnapshot.data!.docs;
+        final chatDocs = chatSnapshot.data?.docs ?? [];
 
         return ListView.builder(
             reverse: true,

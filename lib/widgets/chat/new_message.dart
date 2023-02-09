@@ -56,7 +56,7 @@ class _NewMessageState extends State<NewMessage> {
         .get();
     final userData = userSnapshot.data() as Map<String, dynamic>;
 
-    FirebaseFirestore.instance.collection('chat').add({
+    FirebaseFirestore.instance.collection('chats').add({
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': user?.uid,
