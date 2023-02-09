@@ -34,8 +34,8 @@ class Messages extends StatelessWidget {
               Map<String, dynamic> data =
                   chatDocs[index].data() as Map<String, dynamic>;
 
-              return MessageBubble(data['text'], data['username'], 'userImage',
-                  data['userId'] == user?.uid);
+              return MessageBubble(data['text'], data['username'],
+                  data['userImage'], data['userId'] == user?.uid);
             });
       },
     );
