@@ -11,7 +11,7 @@ class AuthForm extends StatefulWidget {
     String password,
     String userName,
     bool isLogin,
-    File userImageFile,
+    File? userImageFile,
     BuildContext ctx,
   ) submitFn;
   const AuthForm(this.submitFn, this.isLoading, {super.key});
@@ -154,7 +154,7 @@ class _AuthFormState extends State<AuthForm> {
         _userPassword.trim(),
         _userName.trim(),
         _isLogin,
-        _userImageFile!,
+        _userImageFile,
         context,
       );
     }

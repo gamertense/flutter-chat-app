@@ -1,12 +1,20 @@
+import 'dart:developer';
+
 import 'package:chat_app/widgets/chat/messages.dart';
 import 'package:chat_app/widgets/chat/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+// This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,5 +55,26 @@ class ChatScreen extends StatelessWidget {
             NewMessage(),
           ],
         ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final messaging = FirebaseMessaging.instance;
+    messaging.requestPermission();
+
+    FirebaseMessaging.onMessage.listen((message) {
+      log(
+          message.notification?.toMap().toString() ??
+              "Can't convert notification message to map",
+          name: "FirebaseMessaging.onMessage.listen");
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      log(
+          message.notification?.toMap().toString() ??
+              "Can't convert notification message to map",
+          name: "FirebaseMessaging.onMessageOpenedApp.listen");
+    });
   }
 }

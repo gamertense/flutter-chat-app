@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app/widgets/auth/auth_form.dart';
@@ -33,7 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
     String password,
     String username,
     bool isLogin,
-    File userImageFile,
+    File? userImageFile,
     BuildContext ctx,
   ) async {
     UserCredential authResult;
@@ -47,24 +48,25 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-      } else {
-        authResult = await _auth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${authResult.user?.uid}.jpg');
-        await storageRef.putFile(userImageFile);
-
-        final imageUrl = await storageRef.getDownloadURL();
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(authResult.user?.uid)
-            .set({'username': username, 'email': email, 'image_url': imageUrl});
+        return;
       }
+
+      authResult = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child('${authResult.user?.uid}.jpg');
+      await storageRef.putFile(userImageFile!);
+
+      final imageUrl = await storageRef.getDownloadURL();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(authResult.user?.uid)
+          .set({'username': username, 'email': email, 'image_url': imageUrl});
     } on FirebaseAuthException catch (e) {
       var message = 'An error occurred, pelase check your credentials!';
 
@@ -86,7 +88,8 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = false;
       });
     } catch (err) {
-      print(err);
+      log(err.toString(), name: '_submitAuthForm');
+
       setState(() {
         _isLoading = false;
       });
