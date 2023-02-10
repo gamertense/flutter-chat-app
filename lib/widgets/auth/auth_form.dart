@@ -3,18 +3,14 @@ import 'dart:io';
 import 'package:chat_app/widgets/picker/user_image_picker.dart';
 import 'package:flutter/material.dart';
 
+typedef AuthFormSubmittedCallback = Function(String email, String password,
+    String userName, bool isLogin, File? userImageFile, BuildContext ctx);
+
 class AuthForm extends StatefulWidget {
   final bool isLoading;
 
-  final void Function(
-    String email,
-    String password,
-    String userName,
-    bool isLogin,
-    File? userImageFile,
-    BuildContext ctx,
-  ) submitFn;
-  const AuthForm(this.submitFn, this.isLoading, {super.key});
+  final AuthFormSubmittedCallback onFormSubmitted;
+  const AuthForm(this.onFormSubmitted, this.isLoading, {super.key});
 
   @override
   State<AuthForm> createState() => _AuthFormState();
@@ -149,7 +145,7 @@ class _AuthFormState extends State<AuthForm> {
 
     if (isValid) {
       _formKey.currentState!.save();
-      widget.submitFn(
+      widget.onFormSubmitted(
         _userEmail.trim(),
         _userPassword.trim(),
         _userName.trim(),

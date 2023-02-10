@@ -7,3 +7,4 @@ A chat app taught by Maximilian Schwarzmüller in this [course](https://www.udem
 - Some code refactoring
 - Use `dart:developer log()` function instead of `print()` function because it is the recommended way for application logging on Flutter document.
 - Only tested notifications on Android emulator.
+- Define typedef for the callback function in `lib/widgets/auth/auth_form.dart`
